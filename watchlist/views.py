@@ -82,6 +82,11 @@ def settings():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        user = User.query.first()
+        if not user:
+            if not user:
+                flash('请创建第一个用户')
+                return redirect(url_for('login'))
         username = request.form['username']
         password = request.form['password']
 

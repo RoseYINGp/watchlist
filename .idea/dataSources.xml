@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:D:\pythonProject\pythonProject\FlaskProject\data.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="data [2]" uuid="6c683aa6-1536-4aae-a091-5e757aa4f63c">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\pythonProject\pythonProject\FlaskProject\watchlist\data.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
