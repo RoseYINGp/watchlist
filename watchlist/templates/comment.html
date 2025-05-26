@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Comment</h3>
+{% if current_user.is_authenticated %}
+
+<form method="POST">
+    <label>
+        发表评论:
+        <input type="text"
+               name="comment"
+               autocomplete="off"
+               required
+               placeholder="输入您的评论...">
+    </label>
+    <input class="btn" type="submit" value="提交">
+</form>
+{% else %}
+<p class="text-muted">请登录后发表评论</p>
+{% endif %}
+{% endblock %}

@@ -247,6 +247,37 @@ class WatchlistTestCase(unittest.TestCase):
             self.assertEqual(User.query.first().username, 'peter')
             self.assertTrue(User.query.first().validate_password('456'))
 
+    def test_command(self):
+        self.login()
+
+
+        movie_id = 1
+        response = self.client.get(f'/movie/comment/{movie_id}', follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('Home', data)
+        self.assertIn('Settings', data)
+        self.assertIn('Logout', data)
+        self.assertIn('Comment', data)
+        self.assertIn('发表评论:', data)
+
+
+        movie_id = 1
+        response = self.client.post(f'/movie/comment/{movie_id}', data=dict(
+            comment=''
+        ), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertNotIn('Comment created successfully!', data)
+
+
+        movie_id = 1
+        response = self.client.post(f'/movie/comment/{movie_id}', data=dict(
+            comment='1'
+        ), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('Comment created successfully!', data)
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

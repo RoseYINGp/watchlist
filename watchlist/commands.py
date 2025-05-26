@@ -1,8 +1,8 @@
 import click
 
 from watchlist import app, db
-from watchlist.models import User, Movie
-
+from watchlist.models import User, Movie,Comment
+from random import choice
 
 @app.cli.command()
 @click.option('--drop', is_flag=True, help='Create after drop.')
@@ -19,6 +19,7 @@ def forge():
     """Generate fake data."""
     db.create_all()
 
+    # 保持原有数据不变
     name = 'WJie'
     movies = [
         {'title': 'My Neighbor Totoro', 'year': '1988'},
@@ -33,15 +34,30 @@ def forge():
         {'title': 'The Pork of Music', 'year': '2012'},
     ]
 
+    comments = [
+        "好看1", "好看2", "好看3", "好看4", "好看5",
+        "好看6", "好看7", "好看8", "好看9", "好看10"
+    ]
+
     user = User(name=name)
     db.session.add(user)
+
+    # 保持原有添加方式
     for m in movies:
         movie = Movie(title=m['title'], year=m['year'])
         db.session.add(movie)
+    db.session.commit()
+
+    all_movies = Movie.query.all()
+
+    # 保持原有评论生成逻辑
+    for comment_text in comments:
+        movie = choice(all_movies)
+        comment = Comment(comment_text=comment_text, movie=movie)
+        db.session.add(comment)
 
     db.session.commit()
     click.echo('Done.')
-
 
 @app.cli.command()
 @click.option('--username', prompt=True, help='The username used to login.')

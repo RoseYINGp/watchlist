@@ -1,8 +1,9 @@
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
+from jinja2.runtime import new_context
 
 from watchlist import app, db
-from watchlist.models import User, Movie
+from watchlist.models import User, Movie, Comment
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -48,6 +49,35 @@ def edit(movie_id):
         return redirect(url_for('index'))
 
     return render_template('edit.html', movie=movie)
+
+
+@app.route("/movie/comment/<int:movie_id>", methods=['GET', 'POST'])
+def comment(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+
+    if request.method == 'POST':
+        # 直接从request.form获取评论内容
+        # 获取input name=comment中的值
+        comment_text = request.form.get('comment', '').strip()  # 防止空字符串
+
+        # 手动验证：评论内容是否为空
+        if not comment_text:
+            flash("Please enter a comment.")
+            return redirect(url_for('comment', movie_id=movie_id))
+
+        # 创建评论对象并关联电影ID
+        new_comment = Comment(
+            movie_id=movie_id,
+            comment_text=comment_text
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+
+        flash('Comment created successfully!')
+        return redirect(url_for('comment', movie_id=movie_id))
+
+    # 渲染模板（无需传递表单对象）
+    return render_template('comment.html', movie=movie)
 
 
 @app.route('/movie/delete/<int:movie_id>', methods=['POST'])
